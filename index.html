@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0ZCzt1AQR9XC5AxmzhPfcGfUVw2agbMk&libraries=places"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="map-icon">
+            <ul>
+                <li @click="openModal(1)"><img src="./images/globe.gif" alt=""></li>
+                <li @click="openModal(2)"><img src="./images/sunset.gif" alt=""></li>
+                <li @click="openModal(3)"><img src="./images/sunrise.gif" alt=""></li>
+            </ul>
+        </div>
+        <div class="map-dropdown">
+            <select name="selected_country" v-model="selected_country" id="placeDropdown" class="form-control" @change="geocodeSelectedPlace(selected_country)">
+                <option value="">Select a country</option>
+                <option :value="country" v-for="country in countries" :key="country">{{country}}</option>
+            </select>
+        </div>
+
+        <div id="map" style="width: 100%; height: 100vh;"></div>
+        <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14475.199587257002!2d91.8595966!3d24.9048063!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375054d3d270329f%3A0xf58ef93431f67382!2sSylhet!5e0!3m2!1sen!2sbd!4v1693423406476!5m2!1sen!2sbd" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> -->
+        <!-- Modal -->
+        <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{{ geoData?.components?.county && geoData?.components?.county+',' }} {{ geoData?.components?.country }}, {{ geoData?.components?.continent }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="data-box" v-if="modalId == 3">
+                            <h4>Today</h4>
+                            <div class="information">
+                                <div>
+                                    <h4>Sun Rise</h4>
+                                </div>
+                                <div>
+                                    <img src="./images/sunrise.gif" alt="">
+                                </div>
+                                <div>
+                                    <h4 class="temp">{{ getFormattedTime(geoData?.annotations?.sun?.rise?.civil) }}</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="data-box" v-if="modalId == 2">
+                            <h4>Today</h4>
+                            <div class="information">
+                                <div>
+                                    <h4>Sun Set</h4>
+                                </div>
+                                <div>
+                                    <img src="./images/sunset.gif" alt="">
+                                </div>
+                                <div>
+                                    <h4 class="temp">{{ getFormattedTime(geoData?.annotations?.sun?.set?.civil) }}</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+                        <div class="cloud-calender" v-if="modalId == 1">
+                            <table class="table table-bordered">
+                                <!-- <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead> -->
+                                <tbody>
+                                    <tr>
+                                        <th>Country Name</th>
+                                        <td>{{ geoData?.components?.country }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Continent</th>
+                                        <td>{{ geoData?.components?.continent }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Country code</th>
+                                        <td>{{ geoData?.components?.country_code }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Geometry</th>
+                                        <td>{{ geoData?.geometry?.lat }},{{ geoData?.geometry?.lng }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Timezone</th>
+                                        <td>{{ geoData?.annotations?.timezone?.name }} ({{ geoData?.annotations?.timezone?.short_name }})</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Currency  Name</th>
+                                        <td>{{ geoData?.annotations?.currency.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Currency  Symbol</th>
+                                        <td>{{ geoData?.annotations?.currency.symbol }} / {{ geoData?.annotations?.currency.iso_code }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Calling code</th>
+                                        <td>{{ geoData?.annotations?.callingcode }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="cloud-calender" v-if="modalId == 2">
+                            <div class="cloud-box">
+                                <p class="date">Today</p>
+                                <img src="./images/sunny.png" alt="">
+                                <p>{{ getFormattedTime(geoData?.annotations?.sun?.set?.apparent) }}</p>
+                                <p class="type">Apparent <br> Time</p>
+                            </div>
+                            <div class="cloud-box">
+                                <p class="date">Today</p>
+                                <img src="./images/sunny.png" alt="">
+                                <p>{{ getFormattedTime(geoData?.annotations?.sun?.set?.astronomical) }}</p>
+                                <p class="type">Astronomical <br> Time</p>
+                            </div>
+                            <div class="cloud-box">
+                                <p class="date">Today</p>
+                                <img src="./images/sunny.png" alt="">
+                                <p>{{ getFormattedTime(geoData?.annotations?.sun?.set?.civil) }}</p>
+                                <p class="type">Civil <br> Time</p>
+                            </div>
+                            <div class="cloud-box">
+                                <p class="date">Today</p>
+                                <img src="./images/sunny.png" alt="">
+                                <p>{{ getFormattedTime(geoData?.annotations?.sun?.set?.nautical) }}</p>
+                                <p class="type">Nautical <br> Time</p>
+                            </div>
+                        </div>
+
+                        <div class="cloud-calender" v-if="modalId == 3">
+                            <div class="cloud-box">
+                                <p class="date">Today</p>
+                                <img src="./images/sunny.png" alt="">
+                                <p>{{ getFormattedTime(geoData?.annotations?.sun?.rise?.apparent) }}</p>
+                                <p class="type">Apparent <br> Time</p>
+                            </div>
+                            <div class="cloud-box">
+                                <p class="date">Today</p>
+                                <img src="./images/sunny.png" alt="">
+                                <p>{{ getFormattedTime(geoData?.annotations?.sun?.rise?.astronomical) }}</p>
+                                <p class="type">Astronomical  <br> Time</p>
+                            </div>
+                            <div class="cloud-box">
+                                <p class="date">Today</p>
+                                <img src="./images/sunny.png" alt="">
+                                <p>{{ getFormattedTime(geoData?.annotations?.sun?.rise?.civil) }}</p>
+                                <p class="type">Civil  <br> Time</p>
+                            </div>
+                            <div class="cloud-box">
+                                <p class="date">Today</p>
+                                <img src="./images/sunny.png" alt="">
+                                <p>{{ getFormattedTime(geoData?.annotations?.sun?.rise?.nautical) }}</p>
+                                <p class="type">Nautical <br> Time</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="closeModal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data:{
+              selected_country:'',
+              modalId:null,
+              geoData: null,
+              map: null,
+              marker: null,
+              searchBox: null,
+              searchQuery:'',
+              countries:['Afghanistan','ÅlandIslands','Albania','Algeria','AmericanSamoa','AndorrA','Angola','Anguilla','Antarctica','AntiguaandBarbuda','Argentina','Armenia','Aruba','Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bermuda','Bhutan','Bolivia','BosniaandHerzegovina','Botswana','BouvetIsland','Brazil','BritishIndianOceanTerritory','BruneiDarussalam','Bulgaria','BurkinaFaso','Burundi','Cambodia','Cameroon','Canada','CapeVerde','CaymanIslands','CentralAfricanRepublic','Chad','Chile','China','ChristmasIsland','Cocos(Keeling)Islands','Colombia','Comoros','Congo','Congo,TheDemocraticRepublicofthe','CookIslands','CostaRica','CoteD\'Ivoire','Croatia','Cuba','Cyprus','CzechRepublic','Denmark','Djibouti','Dominica','DominicanRepublic','Ecuador','Egypt','ElSalvador','EquatorialGuinea','Eritrea','Estonia','Ethiopia','FalklandIslands(Malvinas)','FaroeIslands','Fiji','Finland','France','FrenchGuiana','FrenchPolynesia','FrenchSouthernTerritories','Gabon','Gambia','Georgia','Germany','Ghana','Gibraltar','Greece','Greenland','Grenada','Guadeloupe','Guam','Guatemala','Guernsey','Guinea','Guinea-Bissau','Guyana','Haiti','HeardIslandandMcdonaldIslands','HolySee(VaticanCityState)','Honduras','HongKong','Hungary','Iceland','India','Indonesia','Iran,IslamicRepublicOf','Iraq','Ireland','IsleofMan','Israel','Italy','Jamaica','Japan','Jersey','Jordan','Kazakhstan','Kenya','Kiribati','Korea,DemocraticPeople\'SRepublicof','Korea,Republicof','Kuwait','Kyrgyzstan','LaoPeople\'SDemocraticRepublic','Latvia','Lebanon','Lesotho','Liberia','LibyanArabJamahiriya','Liechtenstein','Lithuania','Luxembourg','Macao','Macedonia,TheFormerYugoslavRepublicof','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','MarshallIslands','Martinique','Mauritania','Mauritius','Mayotte','Mexico','Micronesia,FederatedStatesof','Moldova,Republicof','Monaco','Mongolia','Montserrat','Morocco','Mozambique','Myanmar','Namibia','Nauru','Nepal','Netherlands','NetherlandsAntilles','NewCaledonia','NewZealand','Nicaragua','Niger','Nigeria','Niue','NorfolkIsland','NorthernMarianaIslands','Norway','Oman','Pakistan','Palau','PalestinianTerritory,Occupied','Panama','PapuaNewGuinea','Paraguay','Peru','Philippines','Pitcairn','Poland','Portugal','PuertoRico','Qatar','Reunion','Romania','RussianFederation','RWANDA','SaintHelena','SaintKittsandNevis','SaintLucia','SaintPierreandMiquelon','SaintVincentandtheGrenadines','Samoa','SanMarino','SaoTomeandPrincipe','SaudiArabia','Senegal','SerbiaandMontenegro','Seychelles','SierraLeone','Singapore','Slovakia','Slovenia','SolomonIslands','Somalia','SouthAfrica','SouthGeorgiaandtheSouthSandwichIslands','Spain','SriLanka','Sudan','Suriname','SvalbardandJanMayen','Swaziland','Sweden','Switzerland','SyrianArabRepublic','Taiwan,ProvinceofChina','Tajikistan','Tanzania,UnitedRepublicof','Thailand','Timor-Leste','Togo','Tokelau','Tonga','TrinidadandTobago','Tunisia','Turkey','Turkmenistan','TurksandCaicosIslands','Tuvalu','Uganda','Ukraine','UnitedArabEmirates','UnitedKingdom','UnitedStates','UnitedStatesMinorOutlyingIslands','Uruguay','Uzbekistan','Vanuatu','Venezuela','VietNam','VirginIslands,British','VirginIslands,U.S.','WallisandFutuna','WesternSahara','Yemen','Zambia','Zimbabwe'],
+            },
+
+            methods: {
+                openModal: function(modalId) {
+                    console.log(modalId);
+                    this.modalId = modalId;
+                    $('#exampleModal').modal('show');
+                },
+                closeModal: function() {
+                    $('#exampleModal').modal('hide');
+                },
+                geocodeSelectedPlace: function(placeName) {
+                    var apiKey = "38fc655abf7849f4851712c42ac411e2"; // Replace with your API key
+    
+                    // API endpoint URL
+                    var apiUrl = "https://api.opencagedata.com/geocode/v1/json?q=" + placeName + "&key=" + apiKey;
+    
+                    // Make a GET request to the API using .get()
+                    $.get(apiUrl, function(data) {
+                        // Handle the API response here
+                        this.geoData = data.results[0];
+                        console.log(data);
+                        // this.openModal();
+                    }.bind(this))
+                    .fail(function(jqXHR, textStatus, errorThrown) {
+                        // Handle any errors here
+                        console.error(textStatus, errorThrown);
+                    });
+                },
+
+                getFormattedTime(unixTimestamp) {
+                    const date = new Date(unixTimestamp * 1000); // Convert to milliseconds
+                    const hours = date.getHours();
+                    const minutes = date.getMinutes();
+                    const amPm = hours >= 12 ? 'PM' : 'AM'; // Determine if it's AM or PM
+                    const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
+                    const formattedMinutes = minutes.toString().padStart(2, '0'); // Ensure minutes are two digits
+                    return `${formattedHours}:${formattedMinutes} ${amPm}`;
+                },
+                
+                placeMarker(location) {
+                    if (this.marker) {
+                        this.marker.setMap(null);
+                    }
+                    
+                    this.marker = new google.maps.Marker({
+                        position: location,
+                        map: this.map
+                    });
+                }
+            },
+            created:function() {
+                // Get the user's current location
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var latitude = position.coords.latitude;
+                        var longitude = position.coords.longitude;
+                        
+                        // Now you can use the latitude and longitude to call geocodeSelectedPlace
+                        var location = latitude + ',' + longitude;
+                        console.log(location);
+                        this.geocodeSelectedPlace(location);
+                        latitude = 24.9240639;
+                        longitude  = 91.9712481;
+
+
+                        const mapOptions = {
+                        center: {
+                            lat: latitude,
+                            lng: longitude
+                        },
+                        zoom: 8
+                        };
+                        
+                        this.map = new google.maps.Map(this.$el.querySelector('#map'), mapOptions);
+                        
+                        if (this.marker) {
+                            this.marker.setMap(null);
+                        }
+                        
+                        const defaultLocation = new google.maps.LatLng(
+                            longitude,
+                            longitude
+                        );
+                        
+                        this.placeMarker(defaultLocation);
+
+                    }.bind(this), function(error) {
+                        console.error("Error getting user's location: " + error.message);
+                    });
+                } else {
+                    console.error("Geolocation is not supported by this browser.");
+                }   
+            },
+            mounted() {
+                
+                
+            },
+        });
+    </script>
+</body>
+</html>
