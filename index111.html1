@@ -13,9 +13,9 @@
     <div id="app">
         <div class="map-icon">
             <ul>
-                <li @click="openModal(1)"><img src="./images/globe.gif" alt=""></li>
-                <li @click="openModal(2)"><img src="./images/sunset.gif" alt=""></li>
-                <li @click="openModal(3)"><img src="./images/sunrise.gif" alt=""></li>
+                <li onclick="openModal(1)"><img src="./images/globe.gif" alt=""></li>
+                <li onclick="openModal(2)"><img src="./images/sunset.gif" alt=""></li>
+                <li onclick="openModal(3)"><img src="./images/sunrise.gif" alt=""></li>
             </ul>
         </div>
         <div class="map-dropdown">
@@ -252,7 +252,7 @@
                         // Now you can use the latitude and longitude to call geocodeSelectedPlace
                         var location = latitude + ',' + longitude;
                         console.log(location);
-                        this.geocodeSelectedPlace(location);
+                        this.   (location);
                         latitude = 24.9240639;
                         longitude  = 91.9712481;
 

@@ -34,9 +34,12 @@ iframe {
 
 .modal-dialog {
   position: absolute !important;
-  right: 20px !important;
-  bottom: 20px !important;
+  /*right: 20px !important;
+  bottom: 20px !important;*/
   width: 500px !important;
+  top:0;
+  left:30%;
+  
 }
 
 .modal-header {
@@ -126,7 +129,7 @@ iframe {
 }
 
 .modal-body {
-  height: 65vh;
+  height: auto;
   overflow-y: scroll;
 }
 
@@ -162,3 +165,7 @@ iframe {
   width: 300px !important;
   border: 2px solid #555 !important;
 }/*# sourceMappingURL=style.css.map */
+
+#modalId1,#modalId2,#modalId3{
+  display: none;
+}
