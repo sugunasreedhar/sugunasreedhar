@@ -331,7 +331,7 @@
     function geocodeSelectedPlace(placeName) {
            var data={}
          var headers = {"selectedPlace":placeName};
-        fetch('selectedPlace='+placeName, {
+        fetch(hostUrl+"api/mapData.php", {
         method : "post",
         mode: 'cors',
         headers: headers,
