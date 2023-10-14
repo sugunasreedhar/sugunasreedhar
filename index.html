@@ -327,8 +327,17 @@
         console.error("Error getting user's location: " + error.message);
     });
 }
-
+ 
     function geocodeSelectedPlace(placeName) {
+         var headers = {};
+        fetch(selectedPlace='+placeName, {
+        method : "GET",
+        mode: 'cors',
+        headers: headers
+    })
+    .then((response) => {
+            console.log(response);
+    });
         //document.querySelector("#frm").submit();
 
              $.ajax({
