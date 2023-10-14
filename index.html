@@ -329,15 +329,16 @@
 }
  
     function geocodeSelectedPlace(placeName) {
-         var headers = {};
+           var data={}
+         var headers = {"selectedPlace":placeName};
         fetch('selectedPlace='+placeName, {
-        method : "GET",
+        method : "post",
         mode: 'cors',
-        headers: headers
+        headers: headers,
+        body: JSON.stringify(data)     
     }).then((response) => {
             console.log(response);
     });
-        //document.querySelector("#frm").submit();
 
              $.ajax({
             data:'selectedPlace='+placeName,    
