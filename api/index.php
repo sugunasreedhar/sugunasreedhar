@@ -5,8 +5,8 @@ ini_set("display_errors", "1");
 header("Content-Type:application/json");
 
 $routeString=explode('/', $_SERVER['REQUEST_URI']);
-
-switch ($routeString[3]) {
+//print_r($routeString);
+switch ($routeString[2]) {
     
     case 'weatherData':
   
@@ -27,7 +27,8 @@ switch ($routeString[3]) {
             response(200,"Record Found",getWikiLinks($_POST));   
          break;
        case'countryInfo':
-        //die('ok');
+     
+       // print_r(($_REQUEST));
         response(200,"Record Found",getCountryInfo($_POST)); 
         break; 
 
