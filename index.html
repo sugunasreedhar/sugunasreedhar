@@ -330,12 +330,11 @@
  
     function geocodeSelectedPlace(placeName) {
          var headers = {};
-        fetch(selectedPlace='+placeName, {
+        fetch('selectedPlace='+placeName, {
         method : "GET",
         mode: 'cors',
         headers: headers
-    })
-    .then((response) => {
+    }).then((response) => {
             console.log(response);
     });
         //document.querySelector("#frm").submit();
