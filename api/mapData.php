@@ -1,7 +1,4 @@
 <?php
-///require "../vendor/autoload.php";
-
-
  if($_REQUEST['selectedPlace']!=""){
        $curl_handle = curl_init();
   	$apiKey = "38fc655abf7849f4851712c42ac411e2"; // Replace with your API key
