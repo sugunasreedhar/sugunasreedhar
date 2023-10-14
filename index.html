@@ -336,7 +336,7 @@
         mode: 'cors',
         headers: headers,
         body: JSON.stringify(data)     
-    }).then((response) => {
+    }).then((response) => { console.log('fetch');
             console.log(response);
     });
 
