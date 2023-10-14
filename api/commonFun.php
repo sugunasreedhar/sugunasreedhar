@@ -86,32 +86,15 @@ return json_encode($arrayLinks);
 //uncomment to test
 //echo convertCurrency(10, 'USD', 'PHP');
 
-
 function getCountryInfo($data){
-   $curl = curl_init();
-
-curl_setopt_array($curl, [
-   CURLOPT_URL => "https://restcountries.com/v2/name/".$data['name'],
-   CURLOPT_RETURNTRANSFER => true,
-   CURLOPT_ENCODING => "",
-   CURLOPT_MAXREDIRS => 10,
-   CURLOPT_TIMEOUT => 30,
-   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-   CURLOPT_CUSTOMREQUEST => "GET"
- 
-]);
-
-$response = curl_exec($curl);
-$de_response=json_decode($response);
-$err = curl_error($curl);
-//echo '<pre>';print_r($de_response);
-curl_close($curl);
-
-if ($err) {
-   echo "cURL Error #:" . $err;
-} 
-return $de_response[count($de_response)-1];
+  $get_data = callAPI('GET',"https://restcountries.com/v2/name/".$data['name'],array()); 
+   $response = json_decode($get_data);
+  //print_r($response);
+$newData=$response[count($response)-1];
+return ($newData);
+//return $de_response;
 }
+
 
 
 ?>
