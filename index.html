@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Portfolio Project</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0ZCzt1AQR9XC5AxmzhPfcGfUVw2agbMk&libraries=places"></script>
  </head>
 <body>
+    
     <form action="" method="get" id="frm">
     <div id="app">
         <div class="map-icon">
@@ -336,8 +337,9 @@
             type:'post',
             //dataType: 'json',
             success: function (data) {
-             
+             console.log(data);
               var mapDataRep=JSON.parse(data);
+
               var locations = [];
               this.geoData=mapDataRep[0];
 
@@ -575,6 +577,7 @@
                         })
      }   
     function setWeatherData(response){
+        console.log(response);
                                 document.getElementById('weatherLocation').innerText=response.name;
 
                                // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm:ss");
@@ -626,23 +629,24 @@
           $.ajax({
                 data:'name='+countryName,   
                 url: "api/countryInfo",
-                async: true,
-                type:'post',
-                //dataType: 'json',
+                type:'POST',
+                dataType: 'json',
                 beforeSend:function(){
                     document.querySelector('#one').innerText='Wait..';
                 },
                 success: function (data) {
+                      console.log(data);
                     var response=data.response_data;
                
-                     console.log(response.name);
+                  
+                    if(response!=null){
                     $("#one").text(`Capital :${response.capital}`);
                      $("#two").text(`Population :${response.population}`);
                       $("#three").text(`Area :${response.area}`);
                     $("#five").text(`Region :${response.region} Sub Region:${response.subregion}`);
                        $("#four").html('Flag &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img style="width:100px" src="'+response.flags.png+'"/>');
                        
-                      
+                    }  
                      $('#ContryInfoModal').modal('show');
                      
 
