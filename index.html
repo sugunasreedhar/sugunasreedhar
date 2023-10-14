@@ -312,6 +312,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script> -->
  <script>
+     var hostUrl=window.location.href;
    if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
                         var latitude = position.coords.latitude;
@@ -332,7 +333,7 @@
 
              $.ajax({
             data:'selectedPlace='+placeName,    
-            url: "api/mapData.php",
+            url: hostUrl+"api/mapData.php",
             async: true,
             type:'post',
             //dataType: 'json',
@@ -418,7 +419,7 @@
      function getCountryList(placeName){
              $.ajax({
             data:'selectedPlace='+placeName,    
-            url: "api/countryData.php",
+            url: hostUrl+"api/countryData.php",
             async: true,
             type:'get',
             //dataType: 'json',
@@ -482,7 +483,7 @@
                        $('#ContryInfoModal').modal('hide');
                         $.ajax({
                             data:'location='+document.getElementById('placeDropdown').value,    
-                            url: "api/weatherData",
+                            url: hostUrl+"api/weatherData",
                             async: true,
                             type:'post',
                             //dataType: 'json',
@@ -519,7 +520,7 @@
      function getWikiList(){
           $.ajax({
                            data:'title='+document.getElementById('search').value,    
-                            url: "api/wikiLinks",
+                            url: hostUrl+"api/wikiLinks",
                             async: true,
                             type:'post',
                             //dataType: 'json',
@@ -537,7 +538,7 @@
      function getCurrenyList(){
                         $.ajax({
                            // data:'location='+document.getElementById('placeDropdown').value,    
-                            url: "api/currencyList",
+                            url: hostUrl+"api/currencyList",
                             async: true,
                             type:'get',
                             //dataType: 'json',
@@ -614,7 +615,7 @@
         
           $.ajax({
                 data:'amount='+value+'&currency1='+currency1+'&currency2='+currency2,   
-                url: "api/currencyConvert",
+                url: hostUrl+"api/currencyConvert",
                 async: true,
                 type:'post',
                 //dataType: 'json',
@@ -628,7 +629,7 @@
         
           $.ajax({
                 data:'name='+countryName,   
-                url: "api/countryInfo",
+                url: hostUrl+"api/countryInfo",
                 type:'POST',
                 dataType: 'json',
                 beforeSend:function(){
