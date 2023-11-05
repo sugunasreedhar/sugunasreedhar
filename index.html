@@ -537,7 +537,7 @@
                             //dataType: 'json',
                             success: function (data) {
                                 console.log(data);
-                                const response=data.response_data;
+                                const response=JSON.parse(data);
                                 var optionData=document.getElementById('currencyOption');
                                 var optionData2=document.getElementById('currencyOption2');
                                 
@@ -627,7 +627,7 @@
                     document.querySelector('#one').innerText='Wait..';
                 },
                 success: function (data) {
-                     console.log(data);
+                     console.log(JSON.stringify(data));
                      var response = JSON.parse(data);
                      
                     var newData=response[response.length-1];
