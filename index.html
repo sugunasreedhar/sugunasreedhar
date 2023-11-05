@@ -474,15 +474,16 @@
                      $('#WikiModal').modal('hide');  
                       $('#weatherModal').modal('show'); 
                        $('#ContryInfoModal').modal('hide');
+                     var location=document.getElementById('placeDropdown').value;
                         $.ajax({
-                            data:'location='+document.getElementById('placeDropdown').value,    
-                            url: hostUrl+"api/weatherData",
+                            //data:'location='+document.getElementById('placeDropdown').value,    
+                            url: 'http://api.openweathermap.org/data/2.5/weather?q='+location+'&APPID=c9a90ff4fba57b0aea106922863cf618',
                             async: true,
                             type:'post',
                             //dataType: 'json',
                             success: function (data) {
-                                //console.log(data);
-                                const response=data.response_data;
+                                console.log(data);
+                                const response=data;
                                setWeatherData(response);
 
 
