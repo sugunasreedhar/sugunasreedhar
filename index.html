@@ -329,26 +329,12 @@
 }
  
     function geocodeSelectedPlace(placeName) {
-           var http = new XMLHttpRequest();
-            var url = hostUrl+"api/mapData.php";
-            var params = 'selectedPlace='+placeName ;
-            http.open('POST', url, true);
-            
-            //Send the proper header information along with the request
-            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            
-            http.onreadystatechange = function() {//Call a function when the state changes.
-                if(http.readyState == 4 && http.status == 200) {
-                    alert(http.responseText);
-                }
-            }
-            http.send(params);
-
-             $.ajax({
-            data:'selectedPlace='+placeName,    
-            url: hostUrl+"api/mapData.php",
+         var apiKey = "38fc655abf7849f4851712c42ac411e2"; // Replace with your API key
+         var apiUrl = "https://api.opencagedata.com/geocode/v1/json?q="+placeName+"&key="+apiKey;
+          $.ajax({
+            url: apiUrl,
             async: true,
-            type:'post',
+            type:'get',
             //dataType: 'json',
             success: function (data) {
              console.log(data);
@@ -433,7 +419,7 @@
             
              
               var apiData=getCountryData();  
-         console.log(apiData);
+   
               var countryData=JSON.parse(apiData);
               var dropdownHtml=document.getElementById('placeDropdown');
 
@@ -543,9 +529,9 @@
 
      }     
      function getCurrenyList(){
-                        $.ajax({
+                       $.ajax({
                            // data:'location='+document.getElementById('placeDropdown').value,    
-                            url: hostUrl+"api/currencyList",
+                            url: "https://api.frankfurter.app/currencies",
                             async: true,
                             type:'get',
                             //dataType: 'json',
