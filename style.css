@@ -132,12 +132,13 @@ iframe {
   height: auto;
   overflow-y: scroll;
 }
-
+.modal-dialog {
+  top: 0;
+    left: 0%;
+    right: 0%!important;
+}
 @media screen and (max-width: 800px) {
-  .modal-dialog {
-    width: 360px !important;
-    right: -4px !important;
-  }
+ 
   .last-one {
     width: 100px !important;
   }
