@@ -607,7 +607,7 @@
     function convert(currency1, currency2, value){
       
           $.ajax({
-                url: 'https://api.frankfurter.app/latest?amount='+value+'&from='+currency1+'&to='+currency2,,
+                url: 'https://api.frankfurter.app/latest?amount='+value+'&from='+currency1+'&to='+currency2,
                 async: true,
                 type:'get',
                 //dataType: 'json',
@@ -620,7 +620,7 @@
     function getCountryInfo(countryName){
        
           $.ajax({
-                url: https://restcountries.com/v2/name/'+countryName,
+                url: 'https://restcountries.com/v2/name/'+countryName,
                 type:'get',
                 dataType: 'json',
                 beforeSend:function(){
