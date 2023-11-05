@@ -479,7 +479,7 @@
                             //data:'location='+document.getElementById('placeDropdown').value,    
                             url: 'http://api.openweathermap.org/data/2.5/weather?q='+location+'&APPID=c9a90ff4fba57b0aea106922863cf618',
                             async: true,
-                            type:'post',
+                            type:'get',
                             //dataType: 'json',
                             success: function (data) {
                                 console.log(data);
