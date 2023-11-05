@@ -431,15 +431,11 @@
                 }
      
      function getCountryList(placeName){
-             $.ajax({
-            data:'selectedPlace='+placeName,    
-            url: hostUrl+"api/apiData.js",
-            async: true,
-            type:'get',
-            //dataType: 'json',
-            success: function (data) {
-             console.log(data);
-              var countryData=(data);
+            
+             
+              var apiData=getCountryData();  
+         console.log(apiData);
+              var countryData=(apiData);
               var dropdownHtml=document.getElementById('placeDropdown');
 
              
@@ -455,9 +451,7 @@
                   dropdownHtml.appendChild(option);
                 }
 
-             }
              
-             }) 
      }
       function getFormattedTime(unixTimestamp) {
                     const date = new Date(unixTimestamp * 1000); // Convert to milliseconds
