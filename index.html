@@ -605,12 +605,11 @@
       }
     }
     function convert(currency1, currency2, value){
-        
+      
           $.ajax({
-                data:'amount='+value+'&currency1='+currency1+'&currency2='+currency2,   
-                url: hostUrl+"api/currencyConvert",
+                url: 'https://api.frankfurter.app/latest?amount='+value+'&from='+currency1+'&to='+currency2,,
                 async: true,
-                type:'post',
+                type:'get',
                 //dataType: 'json',
                 success: function (data) {
                     console.log(data);
@@ -619,18 +618,21 @@
             });          
     }
     function getCountryInfo(countryName){
-        
+       
           $.ajax({
-                data:'name='+countryName,   
-                url: hostUrl+"api/countryInfo",
-                type:'POST',
+                url: https://restcountries.com/v2/name/'+countryName,
+                type:'get',
                 dataType: 'json',
                 beforeSend:function(){
                     document.querySelector('#one').innerText='Wait..';
                 },
                 success: function (data) {
+                     console.log(data);
+                     var response = JSON.parse(data);
+                     
+                    var newData=response[response.length-1];
                       console.log(data);
-                    var response=data.response_data;
+                    var response=newData;
                
                   
                     if(response!=null){
